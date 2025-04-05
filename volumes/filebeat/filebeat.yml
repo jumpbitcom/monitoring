@@ -1,0 +1,11 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/*.log
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+setup.template.enabled: false
+logging.level: info
