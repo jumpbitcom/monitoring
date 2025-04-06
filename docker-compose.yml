@@ -55,7 +55,7 @@ services:
     container_name: alloy
     volumes:
       - ./volumes/alloy/config.alloy:/etc/alloy/config.alloy
-      - logdata-storage:/var/log
+      - ../logs:/var/log
     command: run /etc/alloy/config.alloy
     depends_on:
       - loki
@@ -80,7 +80,7 @@ services:
     container_name: filebeat
     user: root
     volumes:
-      - logdata-storage:/var/log
+      - ../logs:/var/log
       - ./volumes/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
     depends_on:
       - logstash
