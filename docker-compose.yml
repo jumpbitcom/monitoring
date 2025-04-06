@@ -50,13 +50,13 @@ services:
     networks:
       - monitoring
 
-  promtail:
-    image: grafana/promtail:2.9.4
-    container_name: promtail
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
     volumes:
+      - ./volumes/alloy/config.alloy:/etc/alloy/config.alloy
       - logdata-storage:/var/log
-      - ./volumes/promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
-    command: -config.file=/etc/promtail/promtail-config.yaml
+    command: run /etc/alloy/config.alloy
     depends_on:
       - loki
     networks:

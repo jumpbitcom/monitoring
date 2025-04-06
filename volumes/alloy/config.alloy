@@ -1,0 +1,24 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+loki.source.file "varlogs" {
+  targets = [
+    {
+      __path__ = "/var/log/*.log",
+      job      = "varlogs",
+    },
+  ]
+  forward_to = [loki.process.default.receiver]
+}
+
+loki.process "default" {
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "title": "Alloy Log Shipping Health",
+  "timezone": "browser",
+  "panels": [
+    {
+      "title": "Loki log lines received (rate)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(loki_distributor_received_bytes_total[1m])",
+          "legendFormat": "bytes/sec",
+          "refId": "A"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "--PROM--" },
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "title": "Alloy log lines processed",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(alloy_loki_process_entries_processed_total[1m])",
+          "legendFormat": "processed lines/sec",
+          "refId": "A"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "--PROM--" },
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "title": "Loki Ingestion Errors",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(loki_distributor_ingester_append_failures_total[1m])",
+          "legendFormat": "failures/sec",
+          "refId": "A"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "--PROM--" },
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
+    },
+    {
+      "title": "Alloy Config Reloads (Success)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "increase(alloy_config_reloads_total[5m])",
+          "legendFormat": "reloads",
+          "refId": "A"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "--PROM--" },
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
+    }
+  ],
+  "schemaVersion": 37,
+  "version": 1,
+  "refresh": "10s"
+}
