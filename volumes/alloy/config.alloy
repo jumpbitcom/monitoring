@@ -1,24 +1,27 @@
-logging {
-  level  = "info"
-  format = "logfmt"
+server {
+  http_listen_port = 8080
 }
 
-loki.source.file "varlogs" {
-  targets = [
-    {
-      __path__ = "/var/log/*.log",
-      job      = "varlogs",
-    },
-  ]
-  forward_to = [loki.process.default.receiver]
+positions {
+  filename = "/tmp/positions.yaml"
 }
 
-loki.process "default" {
-  forward_to = [loki.write.default.receiver]
+clients {
+  url = "http://loki:3100/loki/api/v1/push"
 }
 
-loki.write "default" {
-  endpoint {
-    url = "http://loki:3100/loki/api/v1/push"
+scrape_configs {
+  job_name = "docker"
+  docker_sd_configs {
+    host = "unix:///var/run/docker.sock"
+  }
+  relabel_configs {
+    source_labels = ["__meta_docker_container_name"]
+    target_label = "container"
+  }
+  relabel_configs {
+    source_labels = ["__meta_docker_container_name"]
+    regex = "/(.+)"
+    target_label = "job"
   }
 }

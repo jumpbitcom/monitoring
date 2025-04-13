@@ -55,7 +55,7 @@ services:
     container_name: alloy
     volumes:
       - ./volumes/alloy/config.alloy:/etc/alloy/config.alloy
-      - ../logs:/var/log
+      - ~/.docker/run/docker.sock:/var/run/docker.sock # Allow Alloy to access Docker logs
     command: run /etc/alloy/config.alloy
     depends_on:
       - loki
