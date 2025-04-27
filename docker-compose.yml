@@ -1,4 +1,5 @@
 # This is a Docker Compose file for setting up a monitoring stack with Prometheus, Grafana, Elasticsearch, Loki, and Logstash.
+
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -46,7 +47,10 @@ services:
     command: -config.file=/etc/loki/loki-config.yaml
     volumes:
       - ./volumes/loki/loki-config.yaml:/etc/loki/loki-config.yaml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - loki-data:/loki
+      - loki-data:/wal
+      - loki-data:/tmp
     networks:
       - monitoring
 
@@ -54,8 +58,9 @@ services:
     image: grafana/alloy:latest
     container_name: alloy
     volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./volumes/alloy/config.alloy:/etc/alloy/config.alloy
-      - ../logs:/var/log
+      - logdata-storage:/var/log
     command: run /etc/alloy/config.alloy
     depends_on:
       - loki
@@ -80,7 +85,7 @@ services:
     container_name: filebeat
     user: root
     volumes:
-      - ../logs:/var/log
+      - logdata-storage:/var/log
       - ./volumes/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
     depends_on:
       - logstash

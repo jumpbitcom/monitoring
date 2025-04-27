@@ -1,24 +1,52 @@
-logging {
-  level  = "info"
-  format = "logfmt"
+// ###############################
+// #### Metrics Configuration ####
+// ###############################
+
+// Host Cadvisor on the Docker socket to expose container metrics.
+prometheus.exporter.cadvisor "example" {
+  docker_host = "unix:///var/run/docker.sock"
+
+  storage_duration = "5m"
 }
 
-loki.source.file "varlogs" {
-  targets = [
-    {
-      __path__ = "/var/log/*.log",
-      job      = "varlogs",
-    },
-  ]
-  forward_to = [loki.process.default.receiver]
+
+// Configure a prometheus.scrape component to collect cadvisor metrics.
+prometheus.scrape "scraper" {
+  targets    = prometheus.exporter.cadvisor.example.targets
+  forward_to = [ prometheus.remote_write.demo.receiver ]
+
+
+  scrape_interval = "10s"
 }
 
-loki.process "default" {
-  forward_to = [loki.write.default.receiver]
+// Configure a prometheus.remote_write component to send metrics to a Prometheus server.
+prometheus.remote_write "demo" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+  }
+}
+
+// ###############################
+// #### Logging Configuration ####
+// ###############################
+
+local.file_match "docker" {
+        path_targets = [{
+                __address__ = "localhost",
+                __path__    = "/var/lib/docker/containers/*/*.log",
+                job         = "docker-logs",
+        }]
+}
+
+loki.source.file "docker" {
+        targets               = local.file_match.docker.targets
+        forward_to            = [loki.write.default.receiver]
+        legacy_positions_file = "/tmp/positions.yaml"
 }
 
 loki.write "default" {
-  endpoint {
-    url = "http://loki:3100/loki/api/v1/push"
-  }
+        endpoint {
+                url = "http://loki:3100/loki/api/v1/push"
+        }
+        external_labels = {}
 }

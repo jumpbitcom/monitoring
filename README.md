@@ -18,7 +18,7 @@ This setup gives you the best of both worlds:
        ┌─────────────┴─────────────┐
        │                           │
 ┌──────▼──────┐         ┌──────────▼────────┐
-│   Promtail  │         │     Filebeat      │
+│   Alloy     │         │     Filebeat      │
 └──────┬──────┘         └──────────┬────────┘
        │                           │
 ┌──────▼──────┐           ┌────────▼────────┐
@@ -28,7 +28,7 @@ This setup gives you the best of both worlds:
        └────────────┬──────────────┘
                     ▼
              ┌─────────────┐
-             │ Elasticsearch│
+             │Elasticsearch│
              └─────────────┘
                     │
                     ▼
@@ -53,8 +53,8 @@ loki config
 
 ---
 
-### 📁 `./promtail/promtail-config.yaml`
-protmail config
+### 📁 `./alloy/config.alloy`
+use a protmail config and convert to alloy yaml - see https://grafana.com/docs/alloy/latest/set-up/migrate/from-promtail/
 
 ---
 
@@ -88,6 +88,7 @@ Use WSL2 on windows and change permissions of filebeat.yml with chmod 444 /mnt/c
 
 4. **Add Data Sources**:
    - **Loki**: `http://loki:3100`
+   - **Prometheus**: `http://prometheus:9090`
    - **Elasticsearch**: `http://elasticsearch:9200`
      - Index pattern: `logstash-*`
      - Time field: `@timestamp`
