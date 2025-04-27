@@ -17,14 +17,15 @@
 ```mermaid
 flowchart TD
     A[Docker Containers] --> B[Alloy]
-    B --> Loki[Loki (Unstructured Logs)]
-    A --> Filebeat[Filebeat (Structured Logs)]
-    Loki --> Grafana[Grafana (Visualization)]
-    Prometheus[Prometheus (Metrics)] --> Grafana
+    B --> Loki[Loki Unstructured Logs]
+    A --> Filebeat[Filebeat Structured Logs]
+    Loki --> Grafana[Grafana Visualization]
+    A --> Prometheus
+    Prometheus[Prometheus Metrics] --> Grafana
     Filebeat --> Logstash
-    Logstash --> ES[Elasticsearch (Structured Logs)]
+    Logstash --> ES[Elasticsearch Structured Logs]
     ES --> Grafana
-```
+    Grafana --> Elasitsearch
 ```
 
 ---
